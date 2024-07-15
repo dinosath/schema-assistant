@@ -1,0 +1,43 @@
+[workspace]
+
+[package]
+name = "hello_world"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+async-trait = "0.1.74"
+axum = "0.7.1"
+eyre = "*"
+loco-rs = { version = "0.3.1", default-features = false, features = ["cli"] }
+shuttle-axum = "0.46.0"
+shuttle-runtime = { version = "0.46.0", default-features = false }
+serde = "*"
+serde_json = "*"
+tokio = { version = "1.33.0", features = ["full"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json"] }
+uuid = { version = "1.8.0", features = ["v4"]}
+qdrant-client = { version = "1.10.1"}
+
+
+[[bin]]
+name = "hello_world-cli"
+path = "src/bin/main.rs"
+required-features = []
+
+[[bin]]
+name = "hello_world"
+path = "src/bin/shuttle.rs"
+
+[dev-dependencies]
+serial_test = "*"
+rstest = "*"
+loco-rs = { version = "0.3.1", default-features = false, features = [
+  "testing",
+  "cli",
+] }
+insta = { version = "*", features = ["redactions", "yaml", "filters"] }
