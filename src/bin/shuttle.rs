@@ -1,4 +1,4 @@
-use hello_world::app::App;
+use schema_assistant::app::App;
 use loco_rs::boot::{create_app, StartMode};
 use loco_rs::environment::Environment;
 

@@ -1,7 +1,7 @@
 [workspace]
 
 [package]
-name = "hello_world"
+name = "schema_assistant"
 version = "0.1.0"
 edition = "2021"
 
@@ -12,7 +12,7 @@ edition = "2021"
 async-trait = "0.1.74"
 axum = "0.7.1"
 eyre = "*"
-loco-rs = { version = "0.3.1", default-features = false, features = ["cli"] }
+loco-rs = { version = "0.6.1", default-features = false, features = ["cli","channels"] }
 shuttle-axum = "0.46.0"
 shuttle-runtime = { version = "0.46.0", default-features = false }
 serde = "*"
@@ -22,21 +22,22 @@ tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json"] }
 uuid = { version = "1.8.0", features = ["v4"]}
 qdrant-client = { version = "1.10.1"}
+chrono = "0.4.38"
 
 
 [[bin]]
-name = "hello_world-cli"
+name = "schema_assistant-cli"
 path = "src/bin/main.rs"
 required-features = []
 
 [[bin]]
-name = "hello_world"
+name = "schema_assistant"
 path = "src/bin/shuttle.rs"
 
 [dev-dependencies]
 serial_test = "*"
 rstest = "*"
-loco-rs = { version = "0.3.1", default-features = false, features = [
+loco-rs = { version = "0.6.1", default-features = false, features = [
   "testing",
   "cli",
 ] }

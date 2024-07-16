@@ -8,8 +8,8 @@ use loco_rs::{
     worker::Processor,
     Result,
 };
-
-use crate::controllers;
+use loco_rs::controller::channels::AppChannels;
+use crate::{controllers,channels};
 
 pub struct App;
 #[async_trait]
@@ -34,11 +34,18 @@ impl Hooks for App {
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
         AppRoutes::empty()
-            // .prefix("/api")
+            .prefix("/api")
             .add_route(controllers::home::routes())
+            .add_app_channels(Self::register_channels(_ctx))
     }
 
     fn connect_workers<'a>(_p: &'a mut Processor, _ctx: &'a AppContext) {}
 
     fn register_tasks(_tasks: &mut Tasks) {}
+
+    fn register_channels(_ctx: &AppContext) -> AppChannels {
+        let channels = AppChannels::default();
+        channels.register.ns("/", channels::application::on_connect);
+        channels
+    }
 }

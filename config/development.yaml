@@ -43,3 +43,10 @@ server:
       enable: false
       # Duration time in milliseconds.
       timeout: 5000
+    static:
+      enable: true
+      must_exist: true
+      folder:
+        uri: "/"
+        path: "frontend/.output/public"
+      fallback: "frontend/.output/public/index.html"
