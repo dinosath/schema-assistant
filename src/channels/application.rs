@@ -1,10 +1,15 @@
-use loco_rs::socketioxide::extract::{Data, SocketRef, State};
+use loco_rs::socketioxide::{
+    extract::{AckSender, Bin, Data, SocketRef,State},
+    SocketIo,
+};
 
 use super::state;
+use tracing::info;
+use serde_json::Value;
 
 #[derive(Debug, serde::Deserialize)]
 pub struct MessageIn {
-    room: String,
+    id: i64,
     text: String,
 }
 
@@ -14,33 +19,13 @@ pub struct Messages {
 }
 
 pub async fn on_connect(socket: SocketRef) {
-    tracing::info!("socket connected: {}", socket.id);
-
-    socket.on(
-        "join",
-        |socket: SocketRef, Data::<String>(room), store: State<state::MessageStore>| async move {
-            tracing::info!("Received join: {:?}", room);
-            let _ = socket.leave_all();
-            let _ = socket.join(room.clone());
-            let messages = store.get(&room).await;
-            let _ = socket.emit("messages", Messages { messages });
-        },
-    );
+    info!("Socket.IO connected: {:?} {:?}", socket.ns(), socket.id);
 
     socket.on(
         "message",
-        |socket: SocketRef, Data::<MessageIn>(data), store: State<state::MessageStore>| async move {
-            tracing::info!("Received message: {:?}", data);
-
-            let response = state::Message {
-                text: data.text,
-                user: format!("anon-{}", socket.id),
-                date: chrono::Utc::now(),
-            };
-
-            store.insert(&data.room, response.clone()).await;
-
-            let _ = socket.within(data.room).emit("message", response);
+        |Data::<Value>(data),ack: AckSender, Bin(bin)| {
+            info!("Received event: {:?} {:?}", data, bin);
+            ack.bin(bin).send(data).ok();
         },
     );
 }
