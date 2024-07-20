@@ -43,7 +43,7 @@ impl Hooks for App {
 
     fn register_tasks(_tasks: &mut Tasks) {}
 
-    fn register_channels(_ctx: &AppContext) -> AppChannels {
+    fn register_channels(ctx: &AppContext) -> AppChannels {
         let channels = AppChannels::default();
         channels.register.ns("/", channels::application::on_connect);
         channels
